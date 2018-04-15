@@ -8,7 +8,7 @@ export default props => (
     <Nav bg="rgba(0,0,0,.2)" align="left" px={[2, 0, 2]}>
       <Flex wrap="wrap">
         <SiteNavLink url="/" isCurrent={props.current === "Index"}>
-          Styled Starter
+          Home
         </SiteNavLink>
         <SiteNavLink url="about" isCurrent={props.current === "About"}>
           About
