@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { A, Box, Flex, H2, Text, purple9 } from "styled-system-html";
 import styled from "styled-components";
+import { firstStore } from "../gameplay/createDungeon";
 
 // import posed from "react-pose";
 
@@ -51,42 +52,54 @@ const StyledBouncyCell = styled(BouncyTile)`
 `;
 
 export default class Dungeon extends Component {
+  // constructor(props) {
+  //   super(props);
+  //   handleKeydown = this.bind(handleKeydown);
+  // }
+  // handleKeydown = e => {
+  //   console.log("i have pressed a key");
+  // };
   render() {
-    let { entities, playerPosition } = this.props.store.entities;
+    let { playerPosition } = this.props.store;
+    let { entities } = this.props.store;
 
-    const [playerX, playerY] = playerPosition;
+    const [playerX = 0, playerY = 0] = playerPosition ? playerPosition : [0, 0];
 
     const { store } = this.props;
-    const cells = entities.map((element, index) => {
-      return (
-        <StyledRow className="row" key={Date.now() + index}>
-          {element.map((cell, i) => {
-            ////////////logs for better understanding the type cells//////////////
-            if (cell.type == "enemy") console.log(cell);
-            else if (cell.type == "weapon") console.log(cell);
-            else if (cell.type == "exit") console.log(cell);
-            else if (cell.type == "player") console.log(cell);
-            /////////////////////////////////////////////////////////////
-            return (
-              <StyledBouncyCell
-                key={i}
-                className={cell.type ? "cell " + cell.type : "cell"}
-                type={cell.type ? cell.type : null}
-                opacity={cell.opacity ? cell.opacity : 1}
-              >
-                {cell.type == "enemy"
-                  ? "E"
-                  : cell.type == "enemy"
-                    ? "W"
-                    : cell.type == "exit"
-                      ? "X"
-                      : cell.type == "player" ? "P" : ""}
-              </StyledBouncyCell>
-            );
-          })}
-        </StyledRow>
-      );
-    });
+    const cells = !entities
+      ? [1, 2, 3]
+      : entities.map((element, index) => {
+          return (
+            <StyledRow className="row" key={Date.now() + index}>
+              {element.map((cell, i) => {
+                ////////////logs for better understanding the type cells//////////////
+                if (cell.type == "enemy") console.log(cell);
+                else if (cell.type == "weapon") console.log(cell);
+                else if (cell.type == "exit") console.log(cell);
+                else if (cell.type == "player") console.log(cell);
+                /////////////////////////////////////////////////////////////
+                return (
+                  <StyledBouncyCell
+                    key={i}
+                    className={cell.type ? "cell " + cell.type : "cell"}
+                    type={cell.type ? cell.type : null}
+                    opacity={cell.opacity ? cell.opacity : 1}
+                  >
+                    {cell.type == "enemy"
+                      ? "E"
+                      : cell.type == "enemy"
+                        ? "W"
+                        : cell.type == "exit"
+                          ? "X"
+                          : cell.type == "player"
+                            ? "P"
+                            : ""}
+                  </StyledBouncyCell>
+                );
+              })}
+            </StyledRow>
+          );
+        });
 
     return (
       <div

@@ -20,25 +20,16 @@ const bumpBuild = actionCreator(function bumpBuild(state, increment) {
 });
 
 const Homepage = ({ build, bumpBuild }, ...props) => (
-  // <div>
-  //   <h1>Homepage</h1>
-  //   <h3>Current build: {build}</h3>
-  //   <p>
-  //     <button onClick={e => bumpBuild(1)}>Bump build!</button>
-  //   </p>
-  //   <Link href="/about">
-  //     <a>About Us</a>
-  //   </Link>
-  // </div>
   <Page name="Index">
-    <h1>Homepage</h1>
-    <h3>Current build: {build}</h3>
-    <p>
-      <button onClick={e => bumpBuild(1)}>Bump build!</button>
-    </p>
-    <Link href="/about">
-      <a>About Us</a>
-    </Link>
+    <Box>
+      <Box p={6} mw="1200px" mx="auto" align="center">
+        <h1>Homepage</h1>
+        <h3>Current build: {build}</h3>
+        <p>
+          <button onClick={e => bumpBuild(1)}>Bump build!</button>
+        </p>
+      </Box>
+    </Box>
   </Page>
 );
 

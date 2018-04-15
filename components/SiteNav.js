@@ -17,7 +17,7 @@ export default props => (
           Dungeon
         </SiteNavLink>
         <Box ml="auto">
-          <SiteNavLinkExternal url="https://github.com/johnpolacek/styled-starter">
+          <SiteNavLinkExternal url="https://github.com/theednaffattack/dungeon-crawler_v3">
             <Img
               position="relative"
               style={{ top: "3px", left: "-1px" }}
