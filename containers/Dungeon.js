@@ -47,7 +47,7 @@ const bumpVersion = actionCreator(function bumpVersion(state, increment) {
 });
 
 const changeEntity = actionCreator(function changeEntity(state, payload) {
-  const [x, y] = payload.coords;
+  const [x, y] = payload; // .coords;
   const entities = update(state.entities, {
     [y]: {
       [x]: { $set: payload.entity }
@@ -71,29 +71,99 @@ const createLevel = actionCreator(function createLevel(state, payload) {
 });
 
 const setDungeonLevel = actionCreator(function setDungeonLevel(state, payload) {
-  console.log(state);
   return { ...state, dungeonLevel: state.dungeonLevel + payload };
 });
 
+const blah = new Promise((resolve, reject) => {});
 
-const DungeonContainer = ({version, bumpVersion, dungeonLevel, entities, changeEntity, changePlayerPosition, createLevel, setDungeonLevel, playerPosition}) => (
+function playerInput(playerLocation, entities, vector) {
+  // let vectorX = vector[0];
+  // let vectorY = vector[1];
+  // let [x, y] = playerLocation;
+  let [vectorX, vectorY] = vector;
+  // const [x, y] = playerLocation;
+
+  let x = playerLocation[0];
+  let y = playerLocation[1];
+
+  const newPosition = [vectorX + x, vectorY + y]; // define where we're moving to
+
+  const newPlayer = entities[y][x];
+  const destination = entities[y + vectorY][x + vectorX]; // whats in the cell we're heading to
+
+  let [newX, newY] = newPosition;
+
+  return newPosition; // changePlayerPosition(newPosition);
+}
+
+const handleKeyDown = actionCreator(function handleKeyDown(state, payload) {
+  const upResult = playerInput(state.playerPosition, state.entities, [0, -1]);
+  const rightResult = playerInput(state.playerPosition, state.entities, [1, 0]);
+  const downResult = playerInput(state.playerPosition, state.entities, [0, 1]);
+  const leftResult = playerInput(state.playerPosition, state.entities, [-1, 0]);
+
+  payload.persist();
+
+  switch (payload.key) {
+    case "ArrowUp":
+      return { ...state, playerPosition: upResult };
+    case "ArrowRight":
+      return {
+        ...state,
+        playerPosition: rightResult
+      };
+    case "ArrowDown":
+      return {
+        ...state,
+        playerPosition: downResult
+      };
+    case "ArrowLeft":
+      return {
+        ...state,
+        playerPosition: leftResult
+      };
+
+    default:
+      return { ...state };
+  }
+});
+
+const DungeonContainer = ({
+  version,
+  dungeonLevel,
+  entities,
+  bumpVersion,
+  changeEntity,
+  changePlayerPosition,
+  createLevel,
+  handleKeyDown,
+  playerPosition,
+  setDungeonLevel
+}) => (
   <Page name="Dungeon">
-    <Box p={4} mw="1200px" mx="auto" align="center">
+    <Box
+      p={4}
+      mw="1200px"
+      mx="auto"
+      align="center"
+      onKeyDown={e => handleKeyDown(e)}
+      tabIndex="0"
+    >
       <H3>Level {dungeonLevel}</H3>
-      {JSON.stringify(playerPosition)}
-      <Box>
-        <Button bg="base" mr={1} onClick={e => bumpVersion(1)}>
+      <pre>{JSON.stringify(playerPosition)}</pre>
+      <Box my={3}>
+        <Button bg="orange6" mr={1} onClick={e => bumpVersion(1)}>
           Bump version!
         </Button>
-        <Button bg="base" mr={1} onClick={e => createLevel(1)}>
+        <Button bg="pink8" mr={1} onClick={e => createLevel(1)}>
           Start Game!
         </Button>
-        <Button bg="base" mr={1} onClick={e => setDungeonLevel(1)}>
+        <Button bg="blue" mr={1} onClick={e => setDungeonLevel(1)}>
           Set Dungeon Level!
         </Button>
       </Box>
       {process.browser ? (
-        <Dungeon store={entities} />
+        <Dungeon store={entities} tabIndex="0" />
       ) : (
         <StyledLoading>loading...</StyledLoading>
       )}
@@ -113,7 +183,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { bumpVersion, changeEntity, createLevel, setDungeonLevel },
+    { bumpVersion, changeEntity, createLevel, setDungeonLevel, handleKeyDown },
     dispatch
   );
 }

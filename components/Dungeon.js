@@ -22,13 +22,13 @@ const exit = "#00b9f1";
 const boss = "#c447e0";
 
 const tileType = {
-  enemy: "FireBrick",
-  weapon: "#f3f70c",
-  potion: "OrangeRed",
-  player: "#fc8d8d",
-  exit: "#00b9f1",
   boss: "#c447e0",
-  floor: "green"
+  enemy: "FireBrick",
+  exit: "#00b9f1",
+  floor: "green",
+  player: "#fc8d8d",
+  potion: "OrangeRed",
+  weapon: "#f3f70c"
 };
 
 const StyledRow = styled.div`
@@ -37,90 +37,74 @@ const StyledRow = styled.div`
 `;
 
 const StyledCell = styled.div`
-  background-color: ${props => props.type && props.type !== "floor" ? tileType[props.type] : tileType["floor"]};
-  opacity: ${props => props.opacity};
-  color: ${props => props.type && props.type !== "exit" && props.type !=="player" && props.type !=="weapon" ? "#eee" : "black"};
-  height: 22px;
-  width: 22px;
-`;
-
-const StyledBouncyCell = styled(BouncyTile)`
   background-color: ${props =>
-    props.type && props.type !== "floor" ? tileType[props.type] : "green"};
+    props.type && props.type !== "floor"
+      ? tileType[props.type]
+      : tileType["floor"]};
+  color: ${props =>
+    (props.type && props.type == "weapon") ||
+    (props.type && props.type == "player") ||
+    (props.type && props.type == "exit")
+      ? "black"
+      : "#eee"};
   opacity: ${props => props.opacity};
   height: 20px;
   width: 20px;
 `;
 
-export default function Dungeon({store}) {
-  // constructor(props) {
-  //   super(props);
-  //   handleKeydown = this.bind(handleKeydown);
-  // }
-  // handleKeydown = e => {
-  //   console.log("i have pressed a key");
-  // };
-  // render() {
-    // let { playerPosition } = this.props.store;
-    let entities  = store;
-    // console.log(props)
+export default function Dungeon({ store }) {
+  let { playerPosition } = store;
+  let entities = store;
 
-    // const [playerX = 0, playerY = 0] = playerPosition ? playerPosition : [0, 0];
+  const [playerX = 0, playerY = 0] = playerPosition ? playerPosition : [0, 0];
 
-    // const { store } = this.props;
-    const cells = !entities
-      ? [1, 2, 3]
-      : entities.map((element, index) => {
-          return (
-            <StyledRow className="row" key={Date.now() + index}>
-              {element.map((cell, i) => {
-                ////////////logs for better understanding the type cells//////////////
-                if (cell.type == "enemy") console.log(cell);
-                else if (cell.type == "weapon") console.log(cell);
-                else if (cell.type == "exit") console.log(cell);
-                else if (cell.type == "player") console.log(cell);
-                /////////////////////////////////////////////////////////////
-                return (
-                  <StyledCell
-                    key={i}
-                    className={cell.type ? "cell " + cell.type : "cell"}
-                    type={cell.type ? cell.type : null}
-                    opacity={cell.opacity ? cell.opacity : 1}
-                  >
-                    {cell.type == "enemy"
-                      ? "E"
-                      : cell.type == "weapon"
-                        ? "W"
-                        : cell.type == "exit"
-                          ? "X"
-                          : cell.type == "player"
-                            ? "P" 
-                            : cell.type == "potion"
-                              ? "H" 
-                              : cell.type == "boss"
-                                ? "B" : ""}
-                  </StyledCell>
-                );
-              })}
-            </StyledRow>
-          );
-        });
+  const cells = entities ? (
+    entities.map((element, index) => {
+      return (
+        <StyledRow className="row" key={Date.now() + index}>
+          {element.map((cell, i) => {
 
-    return (
+            return (
+              <StyledCell
+                key={i}
+                className={cell.type ? "cell " + cell.type : "cell"}
+                type={cell.type ? cell.type : null}
+                opacity={cell.opacity ? cell.opacity : 1}
+              >
+                {cell.type == "enemy"
+                  ? "E"
+                  : cell.type == "weapon"
+                    ? "W"
+                    : cell.type == "exit"
+                      ? "X"
+                      : cell.type == "potion"
+                        ? "H"
+                        : cell.type == "player"
+                          ? "P"
+                          : ""}
+              </StyledCell>
+            );
+          })}
+        </StyledRow>
+      );
+    })
+  ) : (
+    <div>empty</div>
+  );
+  return (
+    <div
+      className="app"
+      style={{
+        display: "flex",
+        justifyContent: "center"
+      }}
+    >
       <div
-        className="app"
-        style={{
-          display: "flex",
-          justifyContent: "center"
-        }}
+        className="flex-container"
+        style={{ border: 1, borderColor: "rgba(0,0,0,1)" }}
       >
-        <div
-          className="flex-container"
-          style={{ border: 1, borderColor: "rgba(0,0,0,0.2)" }}
-        >
-          {cells}
-        </div>
+        {cells}
       </div>
-    );
-  // }
+    </div>
+  );
 }
