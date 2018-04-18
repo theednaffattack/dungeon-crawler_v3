@@ -75,19 +75,12 @@ const setDungeonLevel = actionCreator(function setDungeonLevel(state, payload) {
   return { ...state, dungeonLevel: state.dungeonLevel + payload };
 });
 
-const DungeonContainer = ({
-  version,
-  dungeonLevel,
-  entities,
-  bumpVersion,
-  changeEntity,
-  changePlayerPosition,
-  createLevel,
-  setDungeonLevel
-}) => (
+
+const DungeonContainer = ({version, bumpVersion, dungeonLevel, entities, changeEntity, changePlayerPosition, createLevel, setDungeonLevel, playerPosition}) => (
   <Page name="Dungeon">
     <Box p={4} mw="1200px" mx="auto" align="center">
       <H3>Level {dungeonLevel}</H3>
+      {JSON.stringify(playerPosition)}
       <Box>
         <Button bg="base" mr={1} onClick={e => bumpVersion(1)}>
           Bump version!
@@ -100,7 +93,7 @@ const DungeonContainer = ({
         </Button>
       </Box>
       {process.browser ? (
-        <Dungeon store={firstStore.entities} />
+        <Dungeon store={entities} />
       ) : (
         <StyledLoading>loading...</StyledLoading>
       )}

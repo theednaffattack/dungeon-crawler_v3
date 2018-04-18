@@ -27,18 +27,19 @@ const tileType = {
   potion: "OrangeRed",
   player: "#fc8d8d",
   exit: "#00b9f1",
-  boss: "#c447e0"
+  boss: "#c447e0",
+  floor: "green"
 };
 
 const StyledRow = styled.div`
   display: flex;
   justify-content: center;
-  color: #eee;
 `;
 
 const StyledCell = styled.div`
-  background-color: ${props => tileType.boss};
+  background-color: ${props => props.type && props.type !== "floor" ? tileType[props.type] : tileType["floor"]};
   opacity: ${props => props.opacity};
+  color: ${props => props.type && props.type !== "exit" && props.type !=="player" && props.type !=="weapon" ? "#eee" : "black"};
   height: 22px;
   width: 22px;
 `;
@@ -51,7 +52,7 @@ const StyledBouncyCell = styled(BouncyTile)`
   width: 20px;
 `;
 
-export default class Dungeon extends Component {
+export default function Dungeon({store}) {
   // constructor(props) {
   //   super(props);
   //   handleKeydown = this.bind(handleKeydown);
@@ -59,13 +60,14 @@ export default class Dungeon extends Component {
   // handleKeydown = e => {
   //   console.log("i have pressed a key");
   // };
-  render() {
-    let { playerPosition } = this.props.store;
-    let { entities } = this.props.store;
+  // render() {
+    // let { playerPosition } = this.props.store;
+    let entities  = store;
+    // console.log(props)
 
-    const [playerX = 0, playerY = 0] = playerPosition ? playerPosition : [0, 0];
+    // const [playerX = 0, playerY = 0] = playerPosition ? playerPosition : [0, 0];
 
-    const { store } = this.props;
+    // const { store } = this.props;
     const cells = !entities
       ? [1, 2, 3]
       : entities.map((element, index) => {
@@ -79,7 +81,7 @@ export default class Dungeon extends Component {
                 else if (cell.type == "player") console.log(cell);
                 /////////////////////////////////////////////////////////////
                 return (
-                  <StyledBouncyCell
+                  <StyledCell
                     key={i}
                     className={cell.type ? "cell " + cell.type : "cell"}
                     type={cell.type ? cell.type : null}
@@ -87,14 +89,17 @@ export default class Dungeon extends Component {
                   >
                     {cell.type == "enemy"
                       ? "E"
-                      : cell.type == "enemy"
+                      : cell.type == "weapon"
                         ? "W"
                         : cell.type == "exit"
                           ? "X"
                           : cell.type == "player"
-                            ? "P"
-                            : ""}
-                  </StyledBouncyCell>
+                            ? "P" 
+                            : cell.type == "potion"
+                              ? "H" 
+                              : cell.type == "boss"
+                                ? "B" : ""}
+                  </StyledCell>
                 );
               })}
             </StyledRow>
@@ -117,5 +122,5 @@ export default class Dungeon extends Component {
         </div>
       </div>
     );
-  }
+  // }
 }
